@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101c2b">
+  <title>Q-SAFE · Local Integrity Workspace</title>
+  <link rel="stylesheet" href="/app.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Q-SAFE home"><span class="brand-mark">Q</span><span>Q-SAFE<span class="brand-sub">LOCAL INTEGRITY WORKSPACE</span></span></a>
+      <div class="top-status"><span class="pulse"></span><span id="connection-label">Checking local service</span><span class="version">RESEARCH PROTOTYPE</span></div>
+    </header>
+
+    <main>
+      <section class="hero hero-compact">
+        <div class="hero-copy">
+          <p class="eyebrow">POST-QUANTUM · AUDIT · RECOVERY</p>
+          <h1>Check and recover<br><em>your own files.</em></h1>
+          <p class="lede">Store a file in the local Q-SAFE simulator, verify sampled shards against its signed commitment, and reconstruct missing shards from authenticated parity data.</p>
+          <p class="local-note"><span class="lock-icon">▣</span> Files stay in your local workspace. The server only listens on this machine.</p>
+        </div>
+        <div class="hero-graphic" aria-label="File, hash, audit and proof workflow">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <div class="core"><span>Q</span><small>SAFE</small></div>
+          <div class="node node-file"><b>▤</b><span>FILE</span></div>
+          <div class="node node-hash"><b>⌗</b><span>HASH</span></div>
+          <div class="node node-audit"><b>⌕</b><span>AUDIT</span></div>
+          <div class="node node-proof"><b>✓</b><span>REPAIR</span></div>
+          <div class="orbit-label">SHA-256 · ML-DSA-44 · ISA-L 4+2</div>
+        </div>
+      </section>
+
+      <section class="workspace-grid">
+        <aside class="file-panel">
+          <div class="section-heading panel-heading"><div><p class="eyebrow">YOUR WORKSPACE</p><h2>Files</h2></div><span id="file-count" class="count-badge">0</span></div>
+          <label id="upload-zone" class="upload-zone" for="file-input">
+            <input id="file-input" type="file" hidden>
+            <span class="upload-icon">＋</span><strong>Add a file</strong>
+            <span>Choose a file · max 128 MiB</span>
+          </label>
+          <div id="file-list" class="file-list"><p class="empty-list">No files yet. Add a file to begin.</p></div>
+        </aside>
+
+        <section id="file-detail" class="detail-panel" hidden>
+          <div class="detail-head"><div><p class="eyebrow">SELECTED DATA</p><h2 id="detail-name">—</h2><span id="detail-meta" class="detail-meta"></span></div><span id="storage-state" class="state-pill">READY</span></div>
+          <div class="commitment"><span>OWNER-SIGNED MERKLE ROOT</span><code id="detail-root">—</code></div>
+          <div class="shard-summary"><div><strong id="available-shards">—</strong><span>shards available</span></div><div><strong id="unavailable-shards">—</strong><span>shards unavailable</span></div><div><strong id="total-shards">—</strong><span>total shards</span></div></div>
+
+          <div class="controls">
+            <label>Audit sample count<input id="sample-count" type="number" min="1" value="1"></label>
+            <button id="audit-button" class="action-button primary">Run integrity audit</button>
+          </div>
+          <div class="controls recovery-controls">
+            <label>Shard index<input id="shard-index" type="number" min="0" value="0"></label>
+            <button id="loss-button" class="action-button">Simulate missing shard</button>
+            <button id="recover-button" class="action-button repair-button">Recover file</button>
+          </div>
+          <a id="download-button" class="download-button" hidden>Download recovered file <span>↓</span></a>
+
+          <section class="result-box" aria-live="polite"><div class="result-title"><span class="eyebrow">LATEST ACTION</span><span id="result-indicator" class="result-indicator idle">WAITING</span></div><p id="result-message">Select a file to audit it or try a recovery exercise.</p><div id="audit-counts" class="audit-counts" hidden></div></section>
+        </section>
+        <section id="empty-detail" class="detail-panel empty-detail"><div class="empty-art">⌕</div><h2>Select a file to inspect</h2><p>After ingest, run a sampled or full audit, simulate one unavailable shard, then recover and download the reconstructed file.</p></section>
+      </section>
+
+      <section class="steps" aria-label="Q-SAFE data workflow">
+        <article class="step"><span class="step-number">01</span><div class="step-icon">▦</div><h3>Ingest your file</h3><p>Split it into 64 KiB shards, encode each 4+2 stripe, and sign its Merkle root.</p><span class="step-tag">LOCAL STORAGE</span></article>
+        <article class="step"><span class="step-number">02</span><div class="step-icon">⌕</div><h3>Audit integrity</h3><p>Challenge sampled shards and verify their inclusion proofs against the signed root.</p><span class="step-tag">SAMPLED OR FULL</span></article>
+        <article class="step"><span class="step-number">03</span><div class="step-icon">×</div><h3>Simulate a loss</h3><p>Mark a shard unavailable in the local simulator to exercise data recovery.</p><span class="step-tag">TEST ACTION</span></article>
+        <article class="step"><span class="step-number">04</span><div class="step-icon">✓</div><h3>Recover & restore</h3><p>Authenticate same-stripe inputs, reconstruct, verify against the original root, and restore.</p><span class="step-tag">ISA-L REED–SOLOMON</span></article>
+      </section>
+
+      <section class="bottom-band"><div><span class="bottom-icon">i</span><div><strong>Local research prototype — not a production cloud service</strong><p>Owner signing keys are ephemeral and verification metadata is stored locally. Back up your original file.</p></div></div><a href="/docs" id="guide-link">User & deployment guide <span>↗</span></a></section>
+    </main>
+    <footer><span>Q-SAFE · QUANTUM-SECURE DATA INTEGRITY CHECKING</span><span>LOCAL DATA NEVER LEAVES THIS HOST</span></footer>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+</body>
+</html>

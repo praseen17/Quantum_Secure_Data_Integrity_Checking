@@ -1,0 +1,18 @@
+[Unit]
+Description=Q-SAFE local file integrity interface
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/projects/Q-SAFE
+ExecStart=%h/projects/Q-SAFE/scripts/run_interface.sh --host 127.0.0.1 --port 8765 --data-dir %h/.local/share/qsafe-ui
+Restart=on-failure
+RestartSec=3
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=%h/.local/share/qsafe-ui
+
+[Install]
+WantedBy=default.target

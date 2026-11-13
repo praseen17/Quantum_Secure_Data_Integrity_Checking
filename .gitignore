@@ -1,0 +1,15 @@
+/build/
+/build-*/
+/_deps/
+/vendor/
+/data/
+/benchmarks/raw/
+*.key
+*.secret
+*.pem
+*.p12
+*.sqlite
+*.db
+*.csv
+__pycache__/
+.venv/
