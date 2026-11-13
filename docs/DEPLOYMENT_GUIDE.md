@@ -57,6 +57,43 @@ server bind address to `0.0.0.0` or place it behind a public endpoint without
 adding authentication, TLS, request limits, tenant isolation, protected key
 management, encryption at rest, monitoring, and a security review.
 
+## Open it from another device on your home network
+
+`127.0.0.1` always refers to the device running the browser. The Q-SAFE server
+is deliberately limited to loopback and has no user login, so another device
+cannot connect directly to that address. Keep Q-SAFE bound to loopback and use
+an SSH tunnel through the Windows host instead. WSL2 forwards Linux loopback
+services to Windows localhost; Windows OpenSSH can then forward a private
+device connection to that localhost port.
+
+On the Windows host, install **OpenSSH Server** from **Settings → System →
+Optional features → Add an optional feature** if it is not already installed.
+In an Administrator PowerShell window, start the service:
+
+```powershell
+Start-Service sshd
+Set-Service -Name sshd -StartupType Automatic
+```
+
+Keep the Windows firewall rule for SSH limited to the **Private** network and
+your local subnet. Microsoft documents installation and the SSH firewall rule
+in its [OpenSSH Server guide](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse).
+
+Start Q-SAFE in WSL with `scripts/run_interface.sh`. On the other device, run
+this in a terminal, replacing the placeholders with your Windows account name
+and Windows machine's local IPv4 address:
+
+```sh
+ssh -N -L 8765:127.0.0.1:8765 WindowsUser@WINDOWS-LAN-IP
+```
+
+Leave that terminal open, then open <http://127.0.0.1:8765> on the other
+device. The browser connects through the encrypted SSH tunnel while Q-SAFE
+continues to listen only on loopback. In WSL2's default NAT mode, Windows can
+reach a Linux loopback service through `localhost`; LAN access otherwise
+requires a service to accept LAN traffic, which Q-SAFE intentionally does not
+do. See Microsoft's [WSL networking guide](https://learn.microsoft.com/en-us/windows/wsl/networking).
+
 ## Data lifecycle and removal
 
 Uploaded data is encoded into local data/parity shards and proof metadata.
